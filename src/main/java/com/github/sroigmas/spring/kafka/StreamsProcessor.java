@@ -8,6 +8,7 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class StreamsProcessor {
     KTable<String, Long> wordCounts = stream
         .flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
         .groupBy((key, value) -> value, Grouped.with(stringSerde, stringSerde))
-        .count();
+        .count(Materialized.as("counts"));
 
     wordCounts.toStream().to("streams-wordcount-output", Produced.with(stringSerde, longSerde));
   }
