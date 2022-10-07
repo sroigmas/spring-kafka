@@ -12,8 +12,13 @@ public class KafkaConsumer {
     System.out.println("Received: " + quote);
   }*/
 
-  @KafkaListener(topics = {"hobbit"}, groupId = "spring-kafka")
+  /*@KafkaListener(topics = {"hobbit"}, groupId = "spring-kafka")
   public void consume(ConsumerRecord<Integer, String> record) {
     System.out.println("Received: " + record.value() + " with key: " + record.key());
+  }*/
+
+  @KafkaListener(topics = {"streams-wordcount-output"}, groupId = "spring-kafka")
+  public void consume(ConsumerRecord<String, Long> record) {
+    System.out.println("Key: " + record.key() + ", Value: " + record.value());
   }
 }
