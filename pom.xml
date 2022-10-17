@@ -18,7 +18,18 @@
     <java.version>17</java.version>
     <spring-cloud.version>2021.0.4</spring-cloud.version>
     <javafaker.version>1.0.2</javafaker.version>
+    <avro.version>1.11.1</avro.version>
+    <confluent.version>7.2.2</confluent.version>
   </properties>
+
+  <!--necessary to resolve confluent dependencies-->
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -56,6 +67,17 @@
       <groupId>org.rocksdb</groupId>
       <artifactId>rocksdbjni</artifactId>
       <version>6.29.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${confluent.version}</version>
     </dependency>
 
     <dependency>
@@ -111,6 +133,51 @@
             </exclude>
           </excludes>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>${avro.version}</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>schema</goal>
+              <goal>protocol</goal>
+              <goal>idl-protocol</goal>
+            </goals>
+            <configuration>
+              <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
+              <!--<outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>-->
+              <stringType>String</stringType>
+              <createSetters>false</createSetters>
+              <enableDecimalLogicalType>true</enableDecimalLogicalType>
+              <fieldVisibility>private</fieldVisibility>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--force discovery of generated classes-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-sources/avro</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

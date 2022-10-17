@@ -6,17 +6,15 @@ import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 public class RestService {
 
   private final StreamsBuilderFactoryBean factoryBean;
 
-  @GetMapping("/count/{word}")
+  //  @GetMapping("/count/{word}")
   public Long getCount(@PathVariable String word) {
     final KafkaStreams kafkaStreams = factoryBean.getKafkaStreams();
 

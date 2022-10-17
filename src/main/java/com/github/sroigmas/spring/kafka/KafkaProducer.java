@@ -1,6 +1,7 @@
 package com.github.sroigmas.spring.kafka;
 
 import com.github.javafaker.Faker;
+import com.github.sroigmas.avro.Hobbit;
 import java.time.Duration;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class KafkaProducer {
 
-  private final KafkaTemplate<Integer, String> template;
+  private final KafkaTemplate<Integer, Hobbit> template;
 
   Faker faker;
 
@@ -26,7 +27,7 @@ public class KafkaProducer {
     final Flux<String> quotes = Flux.fromStream(Stream.generate(() -> faker.hobbit().quote()));
 
     Flux.zip(interval, quotes)
-        .map(it -> template.send("hobbit", faker.random().nextInt(42), it.getT2()))
+        .map(it -> template.send("hobbit-avro", faker.random().nextInt(42), new Hobbit(it.getT2())))
         .blockLast();
   }
 }

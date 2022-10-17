@@ -24,4 +24,12 @@ public class TopicConfiguration {
         //.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
         .build();
   }
+
+  @Bean
+  public NewTopic hobbitAvro() {
+    return TopicBuilder.name("hobbit-avro")
+        .partitions(10)
+        .replicas(3)
+        .build();
+  }
 }

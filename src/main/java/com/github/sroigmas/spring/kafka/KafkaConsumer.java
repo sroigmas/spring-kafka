@@ -1,5 +1,6 @@
 package com.github.sroigmas.spring.kafka;
 
+import com.github.sroigmas.avro.Hobbit;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -17,8 +18,8 @@ public class KafkaConsumer {
     System.out.println("Received: " + record.value() + " with key: " + record.key());
   }*/
 
-  @KafkaListener(topics = {"streams-wordcount-output"}, groupId = "spring-kafka")
-  public void consume(ConsumerRecord<String, Long> record) {
+  @KafkaListener(topics = {"hobbit-avro"}, groupId = "spring-kafka")
+  public void consume(ConsumerRecord<Integer, Hobbit> record) {
     System.out.println("Key: " + record.key() + ", Value: " + record.value());
   }
 }
